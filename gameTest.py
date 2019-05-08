@@ -14,6 +14,8 @@ white = (255,255,255)
 grey = (123,123,123)
 clock = pygame.time.Clock()
 running = True
+hit = 0
+work = True
 wallX = {
     "walloneX" : (100),
     "walltwoX" : (100),
@@ -31,34 +33,41 @@ wallY = {
 
 
 wallImg = pygame.draw.rect(gameDisplay,black, [100,100,50,100])
-def moveCar1(carX,carY):
-    if  not (wallX["walloneX"] < carX < wallX["walloneX"] + 400 and wallY["walloneY"] < carY < wallY["walloneY"]+30):
-        pygame.draw.rect(gameDisplay,grey, (carX, carY,30,30))
+def collideCar1(carX,carY):
+    topLeftX = carX
+    topLeftY = carY
+    topRightX = carX + 25
+    topRightY = carY
+
+    bottomLeftX = carX
+    bottomLeftY = carY + 25
+    bottomRightX = carX + 25
+    bottomRightY = carY + 25
+    hit = False
+
+    if (wallX["walloneX"] <= topLeftX <= wallX["walloneX"] + 400 and wallY["walloneY"] <= topLeftY <= wallY["walloneY"]+30 or wallX["walloneX"] <= bottomLeftX <= wallX["walloneX"]+400 and wallY["walloneY"] <= bottomLeftY <= wallY["walloneY"]+30 or wallX["walloneX"] <= topRightX <= wallX["walloneX"]+400 and wallY["walloneY"] <= topRightY <= wallY["walloneY"]+30 or wallX["walloneX"] <= bottomRightX <= wallX["walloneX"]+400 and wallY["walloneY"] <= bottomRightY <= wallY["walloneY"]+30):
+        hit = True
+        print "w1"
+        return hit
+    if (wallX["walltwoX"] <= topLeftX <= wallX["walltwoX"] + 20 and wallY["walltwoY"] <= topLeftY <= wallY["walltwoY"]+50 or wallX["walltwoX"] <= bottomLeftX <= wallX["walltwoX"]+20 and wallY["walltwoY"] <= bottomLeftY <= wallY["walltwoY"]+50 or wallX["walltwoX"] <= topRightX <= wallX["walltwoX"]+20 and wallY["walltwoY"] <= topRightY <= wallY["walltwoY"]+50 or wallX["walltwoX"] <= bottomRightX <= wallX["walltwoX"]+20 and wallY["walltwoY"] <= bottomRightY <= wallY["walltwoY"]+50):
+        hit = True
+        print "w2"
+        return hit
+    if (wallX["wallthreeX"] <= topLeftX <= wallX["wallthreeX"] + 20 and wallY["wallthreeY"] <= topLeftY <= wallY["wallthreeY"]+50 or wallX["wallthreeX"] <= bottomLeftX <= wallX["wallthreeX"]+20 and wallY["wallthreeY"] <= bottomLeftY <= wallY["wallthreeY"]+50 or wallX["wallthreeX"] <= topRightX <= wallX["wallthreeX"]+20 and wallY["wallthreeY"] <= topRightY <= wallY["wallthreeY"]+50 or wallX["wallthreeX"] <= bottomRightX <= wallX["wallthreeX"]+20 and wallY["wallthreeY"] <= bottomRightY <= wallY["wallthreeY"]+50):
+        hit = True
+        print "w3"
+        return hit
     else:
-        pygame.draw.rect(gameDisplay,grey, (randX, randY,50,50))
+        print "NOT HIT"
+        return hit
+              
+def moveCar1(carX,carY):
+    pygame.draw.rect(gameDisplay,grey, (carX, carY,30,30))
+
 def moveCar2(car2X,car2Y):
     pygame.draw.rect(gameDisplay,black, (car2X, car2Y,30,30))
 
-def tankHitsLeft(carX,carY):
-    for wall in map.getWalls():
-        if (wall.getY()-15 <= tank.getY() <= wall.getY()+95):
-            if 0 <= abs(wall.getX()+80 - tank.getX()+15) <= 2:
-                return True
-def tankHitsRight(tank, map, screen):
-    for wall in map.getWalls():
-        if (wall.getY()-15 <= tank.getY() <= wall.getY()+95):
-            if 0 <= abs(wall.getX() - tank.getX()-15) <= 2:
-                return True
-def tankHitsUp(tank, map, screen):
-    for wall in map.getWalls():
-        if (wall.getX()-15 <= tank.getX() <= wall.getX()+95):
-            if 0 <= abs(wall.getY()+80 - tank.getY()+15) <= 2:
-                return True
-def tankHitsDown(tank, map, screen):
-    for wall in map.getWalls():
-        if (wall.getX()-15 <= tank.getX() <= wall.getX()+95):
-            if 0 <= abs(wall.getY() - tank.getY()-15) <= 2:
-                return True
+
 
 
 
@@ -91,21 +100,38 @@ while running:
         ############################
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                x_change = -2
-                moveCar1(carX,carY)
+                hit = collideCar1(carX,carY)
+                if hit == True:
+                    carX.rect.move(2,0)
+                    hit = False
+                    work = False
+                else:
+                    carX.rect.move(-2,0)
+                    work = True
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
-                x_change = 2
-                moveCar1(carX,carY)
-                
+                hit = collideCar1(carX,carY)
+                if hit == True:
+                    x_change = -2
+                    hit = False
+                else:
+                    x_change = 2
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                y_change = -2
-                moveCar1(carX,carY)
+                hit = collideCar1(carX,carY)
+                if hit == True:
+                    y_change = 2
+                    hit = False
+                else:
+                    y_change = -2
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
-                y_change = 2
-                moveCar1(carX,carY)
+                hit = collideCar1(carX,carY)
+                if hit == True:
+                    y_change = -2
+                    hit = False
+                else:
+                    y_change = 2
 #############################################################################
 
         if event.type == pygame.KEYDOWN:
@@ -151,5 +177,4 @@ while running:
 
 pygame.quit()
 quit()
-
         
