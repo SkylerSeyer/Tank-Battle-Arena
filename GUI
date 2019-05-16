@@ -1,0 +1,52 @@
+import os
+import Tkinter
+import tkFileDialog
+from tkFileDialog import askopenfilename
+from Tkinter import *
+
+ 
+sound = True
+#~~~~ FUNCTIONS~~~~
+
+# start the game
+def start_game():
+  i = 0
+  while i < 100:
+    execfile("GUI.py")
+    i+= 1
+  
+  
+# toggle on/off sound
+def sound():
+  global sound
+  if (sound == True):
+    print "Sound Off"
+    sound = False
+  else:
+    print "Sound On"
+    sound = True
+
+#~~~~~~ GUI ~~~~~~~~
+
+root = Tk()
+root.title('MY GUI')
+root.geometry("1000x300+250+100")
+
+mf = Frame(root)
+mf.pack()
+f1 = Frame(mf, width=600, height=250)
+f1.pack(fill=X)
+f2 = Frame(mf, width=600, height=250)
+f2.pack()
+f3 = Frame(mf, width=600, height=250)
+f3.pack()
+
+
+
+Button(f1, text="Start", command=start_game).grid(row=1, column=10, sticky='ew', padx=8, pady=4)
+Button(f2, text="Sound", command=sound).grid(row=2, column=27, sticky='ew', padx=8, pady=4)
+Button(f3, text='Quit', command=root.destroy).grid(row=3, column=0, sticky=W, pady=4)
+root.mainloop()
+
+
+execfile("GUI.py")
